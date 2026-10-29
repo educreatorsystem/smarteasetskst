@@ -1,9 +1,11 @@
 /** SMART e-ASET SK Sungai Tiram — backend v1.
- * Simpan konfigurasi di Project Settings > Script properties:
- * ADMIN_USERNAME, ADMIN_PASSWORD (minimum 10 aksara), ADMIN_NAME.
- * Jalankan setup() sekali, kemudian deploy sebagai Web App.
+ * Akaun admin dikonfigurasi dengan hash kata laluan.
+ * Jalankan kemaskiniAksesAdmin() untuk akaun yang diminta.
+ * Kemudian deploy versi baharu sebagai Web App.
  * Execute as: Me; Who has access: Anyone. Semua data dilindungi token aplikasi.
  */
+// Kata laluan tidak disimpan sebagai teks biasa.
+const DEFAULT_ADMIN_HASH = {salt:'7eef0ea5-13da-4453-b25e-8e3d9e2db3cf',hash:'+i6zaK9EjsXFmtBNr/jGIrzlYSDgWh6CR+sxz6Gj5j8='};
 const SHEET_ID = '1Io5vxJLqW3ezIH3y37ugp77LGYqmaBvPQqQQv51C0ZI';
 const TABS = {assets:'EASET_ASSETS',locations:'EASET_LOCATIONS',loans:'EASET_LOANS',maintenance:'EASET_MAINTENANCE',moves:'EASET_MOVES',users:'EASET_USERS'};
 const CONDITION=['Baik','Rosak','Dalam Penyelenggaraan'];
@@ -11,12 +13,12 @@ const CATEGORIES=['ICT','Perabot','Peralatan Pejabat','Peralatan PdP','Sukan','K
 function output_(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON)}
 function doGet(){return output_({ok:true,service:'SMART e-ASET',version:1,message:'Gunakan aplikasi dan log masuk untuk mengakses data.'})}
 function setup(){
- const p=PropertiesService.getScriptProperties(),username=p.getProperty('ADMIN_USERNAME'),password=p.getProperty('ADMIN_PASSWORD');
- if(!username||!password||password.length<10)throw Error('Tetapkan ADMIN_USERNAME dan ADMIN_PASSWORD (min. 10 aksara) dalam Script properties.');
+ const p=PropertiesService.getScriptProperties(),username=p.getProperty('ADMIN_USERNAME')||'admin',password=p.getProperty('ADMIN_PASSWORD');
+ if(password&&password.length<10)throw Error('Kata laluan perlu sekurang-kurangnya 10 aksara.');
  const ss=SpreadsheetApp.openById(SHEET_ID);
  Object.values(TABS).forEach(n=>{let s=ss.getSheetByName(n);if(!s){s=ss.insertSheet(n);s.appendRow(['ID','JSON']);s.setFrozenRows(1)}});
  const users=read_('users');if(users.some(u=>u.role==='admin'))throw Error('Admin telah wujud. Gunakan aplikasi untuk mengurus pengguna.');
- const salt=Utilities.getUuid();users.push({id:Utilities.getUuid(),username:username.toLowerCase().trim(),name:p.getProperty('ADMIN_NAME')||'Admin SKST',role:'admin',salt,hash:hash_(password,salt)});write_('users',users);
+ const salt=password?Utilities.getUuid():DEFAULT_ADMIN_HASH.salt;users.push({id:Utilities.getUuid(),username:username.toLowerCase().trim(),name:p.getProperty('ADMIN_NAME')||'Admin SKST',role:'admin',salt,hash:password?hash_(password,salt):DEFAULT_ADMIN_HASH.hash});write_('users',users);
  if(!read_('locations').length)write_('locations',['Pejabat','Makmal Komputer','Bilik Sains','Bilik Sukan','Bilik Kokurikulum'].map(name=>({id:Utilities.getUuid(),name,archived:false})));
  p.deleteProperty('ADMIN_PASSWORD');
 }
@@ -72,3 +74,18 @@ function doPost(e){let lock;try{
  }else throw Error('Tindakan tidak dikenali.');
  changed.forEach(k=>write_(k,d[k]));return output_({ok:true,data:data_(u)});
  }catch(x){return output_({ok:false,error:String(x.message||x)})}finally{if(lock)lock.releaseLock()}}
+
+/** Jalankan secara manual dari editor Apps Script untuk mengemas kini akaun admin. */
+function kemaskiniAksesAdmin(){
+ const lock=LockService.getScriptLock();lock.waitLock(20000);
+ try{
+  const ss=SpreadsheetApp.openById(SHEET_ID);
+  Object.values(TABS).forEach(n=>{if(!ss.getSheetByName(n)){const s=ss.insertSheet(n);s.appendRow(['ID','JSON']);s.setFrozenRows(1)}});
+  const users=read_('users'),old=users.find(u=>u.username==='admin');
+  const record={id:old?old.id:Utilities.getUuid(),username:'admin',name:old?old.name:'Admin SK Sungai Tiram',role:'admin',salt:DEFAULT_ADMIN_HASH.salt,hash:DEFAULT_ADMIN_HASH.hash};
+  if(old)Object.assign(old,record);else users.push(record);
+  write_('users',users);
+  if(!read_('locations').length)write_('locations',['Pejabat','Makmal Komputer','Bilik Sains','Bilik Sukan','Bilik Kokurikulum'].map(name=>({id:Utilities.getUuid(),name,archived:false})));
+  // Rekod aset, pinjaman, penyelenggaraan dan pengguna lain dikekalkan.
+ }finally{lock.releaseLock()}
+}

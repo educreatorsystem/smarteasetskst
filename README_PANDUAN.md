@@ -1,3 +1,12 @@
+# KEMAS KINI AKSES ADMIN
+
+**Username:** `admin`  
+**Password:** `gurucemerlang`
+
+**Wajib:** Gantikan kod dalam editor Apps Script dengan `Code.gs` terkini, jalankan `kemaskiniAksesAdmin`, kemudian Deploy → Manage deployments → Edit → New version → Deploy. URL /exec boleh dikekalkan. Fail ZIP ini belum mengubah akaun pada pelayan secara automatik.
+
+---
+
 # SMART e-ASET — SK Sungai Tiram
 
 Pakej statik untuk GitHub Pages. Paparan moden, hover, grafik ringkasan, logo sekolah, QR, PWA, cetakan A4, CSV dan sandaran JSON. Tiada npm atau build diperlukan.
@@ -11,7 +20,7 @@ Pakej statik untuk GitHub Pages. Paparan moden, hover, grafik ringkasan, logo se
 5. Buka URL HTTPS yang GitHub paparkan selepas deployment selesai.
 
 Fail web: `index.html`, `styles.css`, `app.js`, `manifest.webmanifest`, `sw.js`, `.nojekyll`, folder `icons` dan `vendor`.
-`Code.gs` dan panduan ini boleh kekal dalam repositori; tiada kata laluan disertakan dalam kod.
+**Muat naik fail web sahaja.** Simpan `Code.gs` dan panduan di luar repositori awam kerana ia mengandungi konfigurasi akaun pentadbir. Kata laluan tidak dimasukkan dalam kod frontend.
 
 ## 2. Aktifkan pangkalan data sebenar — wajib sebelum log masuk
 
@@ -24,12 +33,9 @@ URL Apps Script asal telah diisi dalam aplikasi. Respons asal belum dapat disahk
 2. Extensions → Apps Script.
 3. Sandarkan kod Apps Script sedia ada sebelum menggantikannya. Jika skrip asal digunakan oleh aplikasi lain, **cipta projek Apps Script berasingan** untuk e-ASET supaya aplikasi lain tidak terganggu.
 4. Salin keseluruhan kandungan `Code.gs` ke projek yang dipilih dan simpan.
-5. Project Settings → Script properties → Add script property. Masukkan:
-   - `ADMIN_USERNAME`: nama pengguna pilihan sendiri, 3–60 aksara (huruf, nombor, titik, sengkang atau underscore).
-   - `ADMIN_PASSWORD`: kata laluan pilihan sendiri, sekurang-kurangnya 10 aksara.
-   - `ADMIN_NAME`: nama admin, contohnya Admin SK Sungai Tiram.
-6. Pilih fungsi `setup` dan tekan Run. Berikan kebenaran Google yang diperlukan. Jalankan sekali sahaja. Kata laluan awal dibuang daripada Script properties selepas akaun disediakan; rekod akaun menyimpan hash berserta salt.
-7. `setup()` mencipta tab `EASET_ASSETS`, `EASET_LOCATIONS`, `EASET_LOANS`, `EASET_MAINTENANCE`, `EASET_MOVES` dan `EASET_USERS`. Ia tidak memadam tab asal dan tidak mengimport struktur CSV lama secara automatik.
+5. Pilih fungsi **kemaskiniAksesAdmin** dan tekan **Run**. Benarkan akses Google yang diperlukan. Fungsi ini mencipta / mengemas kini akaun `admin` menggunakan hash kata laluan yang diminta. Aset, transaksi dan pengguna lain dikekalkan.
+6. Tidak perlu memasukkan Script properties untuk akaun ini. Jika sudah mempunyai akaun admin, fungsi ini mengemas kini kata laluannya. Jangan kongsi akses editor Apps Script kepada pengguna biasa.
+7. `kemaskiniAksesAdmin()` mencipta tab `EASET_ASSETS`, `EASET_LOCATIONS`, `EASET_LOANS`, `EASET_MAINTENANCE`, `EASET_MOVES` dan `EASET_USERS`. Ia tidak memadam tab asal dan tidak mengimport struktur CSV lama secara automatik.
 8. Deploy → New deployment → Web app → Execute as **Me** → Who has access **Anyone** → Deploy.
 9. Jika menggunakan deployment lama: Deploy → Manage deployments → Edit → Version **New version** → Deploy. Cara ini lazimnya mengekalkan URL /exec sedia ada.
 10. Salin URL sebenar yang berakhir `/exec`. Dalam aplikasi → Tetapan → tampal URL → Simpan URL → Log masuk.
@@ -85,13 +91,13 @@ Laporan ialah pengurusan dalaman, bukan borang rasmi kerajaan.
 4. Rekod kerosakan dan selesaikan penyelenggaraan.
 5. Uji cetakan, QR dan pemasangan PWA menggunakan URL GitHub Pages sebenar.
 
-Kod dan aliran demo telah disemak setempat. Sambungan tulis sebenar, kebenaran Workspace, pemasangan PWA dan pembacaan QR pada domain GitHub akhir perlu disahkan selepas deployment. Fail ini tidak menerbitkan laman atau mengubah Apps Script secara automatik.
+Kod dan aliran demo telah disemak setempat. Kemas kini akaun admin disemak menggunakan pengesahan hash setempat. Sambungan tulis sebenar, kebenaran Workspace, pemasangan PWA dan pembacaan QR pada domain GitHub akhir perlu disahkan selepas deployment. Fail ini tidak menerbitkan laman atau mengubah Apps Script secara automatik.
 
 ## 9. Jika ada masalah
 
 - Respons bukan JSON: semak URL /exec, deploy versi baharu, Execute as Me dan akses Anyone.
 - Medan / tab tiada: jalankan setup sekali dengan Script properties lengkap.
-- Login gagal: gunakan nama pengguna/kata laluan yang ditetapkan, bukan kata laluan Google. Selepas banyak cubaan salah, tunggu 10 minit.
+- Login gagal: gunakan username admin dan kata laluan yang cikgu minta, bukan kata laluan Google. Selepas banyak cubaan salah, tunggu 10 minit.
 - Simpan gagal / timeout: jangan terus ulang; segar semula dahulu untuk menyemak sama ada rekod telah diterima, kemudian cuba semula jika belum wujud.
 - Tiada rekod: data asal dalam tab lain tidak dipindahkan secara automatik. Skema asal CSV belum disahkan.
 - Elakkan Publish to web bagi tab EASET_USERS atau tab yang mengandungi data sensitif. URL CSV awam sedia ada tidak memberi perlindungan akses terhadap data yang diterbitkan.
