@@ -1,3 +1,29 @@
+# KEMAS KINI DAFTAR MASUK & AKSES PERANAN
+
+Butang **Daftar Masuk** tersedia pada header dan halaman utama. Login meminta URL Apps Script, nama pengguna dan kata laluan. URL asal disediakan sebagai nilai awal dan perubahan URL hanya disimpan pada peranti itu.
+
+- Pelawat: halaman pengenalan dan demo rekaan; tiada data sekolah sebenar sebelum login.
+- Guru: dashboard tanpa nilai perolehan, inventori terhad, permohonan pinjaman sendiri dan aduan kerosakan sendiri.
+- Admin: pengurusan aset, arkib, lokasi, pergerakan, kelulusan/penolakan pinjaman, pemulangan, kemas kini penyelenggaraan, laporan/CSV/PDF, sandaran dan pengurusan pengguna.
+- Menu lokasi, laporan dan tetapan hanya muncul untuk admin. Butang pendaftaran aset hanya muncul untuk admin. Kawalan akses data sebenar terus disahkan oleh Apps Script.
+- Mod Demo menggunakan rekod rekaan setempat dan akses simulasi admin; ia tidak mendapat token atau data Google Sheets sebenar.
+
+**Untuk kemas kini:** gantikan fail web GitHub dan gantikan kod Apps Script dengan **Code.gs** dalam ZIP ini → Deploy → Manage deployments → Edit → **New version** → Deploy. URL /exec boleh dikekalkan. Tidak perlu reset akaun atau menjalankan setup semula. Versi backend baharu turut mengehadkan medan kos/pembekal penyelenggaraan bagi guru.
+
+Akses admin, folder Drive gambar dan popup status dikekalkan. Pengesahan sambungan sebenar memerlukan deployment oleh pemilik Apps Script.
+
+---
+
+# KEMAS KINI POPUP STATUS PROSES
+
+Popup hijau untuk proses berjaya, merah untuk kegagalan dan biru untuk makluman. Tekan **Baik, faham** untuk tutup. Popup ralat tidak mengosongkan borang. Butang simpan menunjukkan **Sedang diproses…** semasa menunggu.
+
+Kemas kini fail web GitHub (terutamanya app.js, styles.css dan sw.js). **Tiada perubahan Apps Script diperlukan untuk popup ini** jika Code.gs versi folder Drive terdahulu sudah dideploy. Akaun admin dan folder Drive dikekalkan. Jika belum memasang backend terdahulu, ikut panduan di bawah.
+
+Popup eksport mengesahkan fail disediakan dan permintaan muat turun dihantar kepada pelayar; ia tidak mendakwa fail sudah disimpan ke cakera. Dialog cetak kekal diurus pelayar dan aplikasi tidak mendakwa cetakan fizikal/PDF berjaya. Kejayaan simpan dalam talian hanya dipaparkan selepas pengesahan pelayan.
+
+---
+
 # KEMAS KINI FOLDER GAMBAR
 
 Folder gambar ditetapkan kepada:
