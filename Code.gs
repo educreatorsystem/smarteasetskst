@@ -6,6 +6,7 @@
  */
 // Kata laluan tidak disimpan sebagai teks biasa.
 const DEFAULT_ADMIN_HASH = {salt:'7eef0ea5-13da-4453-b25e-8e3d9e2db3cf',hash:'+i6zaK9EjsXFmtBNr/jGIrzlYSDgWh6CR+sxz6Gj5j8='};
+const IMAGE_FOLDER_ID = '1dHL_ztMowHoKC3DthLu0ICJ5ZwayiJND';
 const SHEET_ID = '1Io5vxJLqW3ezIH3y37ugp77LGYqmaBvPQqQQv51C0ZI';
 const TABS = {assets:'EASET_ASSETS',locations:'EASET_LOCATIONS',loans:'EASET_LOANS',maintenance:'EASET_MAINTENANCE',moves:'EASET_MOVES',users:'EASET_USERS'};
 const CONDITION=['Baik','Rosak','Dalam Penyelenggaraan'];
@@ -44,11 +45,12 @@ function doPost(e){let lock;try{
  if(q.action==='list')return output_({ok:true,data:data_(u)});
  if(q.action==='upload'){
   admin_(u);assert_(['image/jpeg','image/png','image/webp'].includes(q.mime),'Format gambar tidak dibenarkan.');assert_(typeof q.base64==='string'&&q.base64.length<=4194304,'Gambar melebihi 3 MB.');
-  const p=PropertiesService.getScriptProperties();let folderId=p.getProperty('IMAGE_FOLDER_ID');if(!folderId){folderId=DriveApp.createFolder('SMART e-ASET SKST Gambar').getId();p.setProperty('IMAGE_FOLDER_ID',folderId)}
+  // Gunakan folder yang ditetapkan; jangan cipta folder pengganti.
+  let folder;try{folder=DriveApp.getFolderById(IMAGE_FOLDER_ID);assert_(!folder.isTrashed(),'Folder telah dipadam.')}catch(err){throw Error('Folder gambar tidak dapat diakses. Pastikan pemilik deployment mempunyai akses editor kepada folder Drive yang ditetapkan.')}
   const bytes=Utilities.base64Decode(q.base64);assert_(bytes.length<=3*1024*1024,'Gambar terlalu besar.');
-  const file=DriveApp.getFolderById(folderId).createFile(Utilities.newBlob(bytes,q.mime,'ASET-'+Utilities.getUuid()));
+  const file=folder.createFile(Utilities.newBlob(bytes,q.mime,'ASET-'+Utilities.getUuid()+({'image/png':'.png','image/jpeg':'.jpg','image/webp':'.webp'}[q.mime])));
   // Gambar aset mesti boleh dimuat oleh GitHub Pages. Pautan ini boleh dilihat sesiapa yang memilikinya.
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
+  try{file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW)}catch(err){throw Error('Gambar telah dimuat naik ke folder yang ditetapkan tetapi pautan paparan tidak dapat dikongsi. Semak polisi perkongsian Google Workspace sebelum mengulang muat naik.')}
   return output_({ok:true,url:'https://drive.google.com/thumbnail?id='+file.getId()+'&sz=w1000'})
  }
  lock=LockService.getScriptLock();assert_(lock.tryLock(20000),'Pelayan sibuk. Cuba lagi.');
@@ -88,4 +90,11 @@ function kemaskiniAksesAdmin(){
   if(!read_('locations').length)write_('locations',['Pejabat','Makmal Komputer','Bilik Sains','Bilik Sukan','Bilik Kokurikulum'].map(name=>({id:Utilities.getUuid(),name,archived:false})));
   // Rekod aset, pinjaman, penyelenggaraan dan pengguna lain dikekalkan.
  }finally{lock.releaseLock()}
+}
+
+/** Jalankan secara manual untuk menyemak akses folder tanpa mengubah akaun/data. */
+function semakFolderGambar(){
+ const folder=DriveApp.getFolderById(IMAGE_FOLDER_ID);
+ assert_(!folder.isTrashed(),'Folder gambar telah dipadam.');
+ console.log('Folder gambar dapat dibaca: '+folder.getName()+'. Uji satu muat naik melalui aplikasi untuk mengesahkan kebenaran menulis.');
 }

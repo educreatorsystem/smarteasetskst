@@ -1,3 +1,21 @@
+# KEMAS KINI FOLDER GAMBAR
+
+Folder gambar ditetapkan kepada:
+`1dHL_ztMowHoKC3DthLu0ICJ5ZwayiJND`
+
+1. Gantikan kod dalam editor Apps Script dengan **Code.gs** daripada ZIP terkini dan simpan.
+2. Pastikan akaun Google pemilik deployment mempunyai kebenaran menambah fail dalam folder tersebut.
+3. Pilih fungsi **semakFolderGambar** → Run. Benarkan akses Google jika diminta. Semakan ini mengesahkan folder boleh dibaca; uji muat naik untuk mengesahkan kebenaran menulis.
+4. Deploy → Manage deployments → Edit (ikon pensel) → Version: **New version** → Deploy. URL /exec boleh dikekalkan; tidak perlu projek baharu.
+5. Gantikan fail web GitHub dengan fail web dalam ZIP ini. Kekalkan folder icons dan vendor. Jangan muat naik Code.gs atau panduan berisi akses admin ke repositori awam.
+6. Login admin, edit / daftar satu aset dan uji muat naik gambar. Sahkan fail muncul dalam folder yang ditetapkan dan gambar dipaparkan pada aset.
+
+Akaun admin terdahulu, aset dan transaksi dikekalkan. Tidak perlu jalankan semula setup atau kemaskiniAksesAdmin jika akaun admin telah disediakan. Hanya jika akaun belum diwujudkan, ikuti bahagian akses admin di bawah.
+
+Gambar sedia ada kekal pada lokasi asal dan pautannya tidak dipindahkan. Tetapan ini digunakan untuk muat naik gambar baharu. URL gambar luar yang dimasukkan secara manual tidak disalin ke Drive. Pakej ini tidak mengubah deployment secara automatik; sambungan Drive perlu disahkan selepas deploy.
+
+---
+
 # KEMAS KINI AKSES ADMIN
 
 **Username:** `admin`  
@@ -62,7 +80,7 @@ Tetapan → Buka Mod Demo. Terdapat 12 rekod rekaan. Data teks demo disimpan pad
 
 Lencana sekolah telah dimuat turun daripada pautan yang diberi dan dimasukkan dalam `icons`.
 
-Admin boleh memasukkan URL HTTPS atau memuat naik gambar PNG/JPG/WebP sehingga 3 MB. Muat naik mencipta folder Drive `SMART e-ASET SKST Gambar` dan menjadikan fail gambar boleh dilihat oleh sesiapa yang mempunyai pautan, supaya ia boleh dipaparkan dari GitHub Pages. Gunakan gambar aset yang sesuai dikongsi. Jika sekolah menyekat perkongsian Drive, gunakan URL imej yang dibenarkan. Gambar tidak disimpan dalam localStorage.
+Admin boleh memasukkan URL HTTPS atau memuat naik gambar PNG/JPG/WebP sehingga 3 MB. Muat naik menggunakan folder Drive ID `1dHL_ztMowHoKC3DthLu0ICJ5ZwayiJND` dan menjadikan fail gambar boleh dilihat oleh sesiapa yang mempunyai pautan, supaya ia boleh dipaparkan dari GitHub Pages. Gunakan gambar aset yang sesuai dikongsi. Jika sekolah menyekat perkongsian Drive, gunakan URL imej yang dibenarkan. Gambar tidak disimpan dalam localStorage.
 
 QR mengandungi URL GitHub Pages dan ID aset sahaja. Selepas imbas, pengguna perlu log masuk untuk melihat aset. Sediakan sambungan pangkalan data yang sama pada peranti pengimbas melalui Tetapan. Jangan cetak label semasa membuka fail melalui `file://` kerana URL itu tidak boleh digunakan pada peranti lain.
 
