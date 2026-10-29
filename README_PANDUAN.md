@@ -1,6 +1,14 @@
+# PEMBETULAN BORANG DAFTAR MASUK
+
+Ruangan URL Apps Script dibuang daripada borang Daftar Masuk. Pengguna hanya mengisi username dan password. URL sambungan sedia ada digunakan secara automatik. Admin boleh mengubah URL melalui Tetapan selepas log masuk.
+
+Kemas kini fail web GitHub daripada ZIP ini, khususnya app.js dan sw.js. **Tidak perlu mengubah atau deploy Apps Script semula untuk pembetulan ini.** Akaun, data, folder gambar dan had akses dikekalkan.
+
+---
+
 # KEMAS KINI DAFTAR MASUK & AKSES PERANAN
 
-Butang **Daftar Masuk** tersedia pada header dan halaman utama. Login meminta URL Apps Script, nama pengguna dan kata laluan. URL asal disediakan sebagai nilai awal dan perubahan URL hanya disimpan pada peranti itu.
+Butang **Daftar Masuk** tersedia pada header dan halaman utama. Login hanya meminta nama pengguna dan kata laluan. URL Apps Script menggunakan konfigurasi sedia ada; perubahan URL hanya tersedia kepada admin dalam Tetapan.
 
 - Pelawat: halaman pengenalan dan demo rekaan; tiada data sekolah sebenar sebelum login.
 - Guru: dashboard tanpa nilai perolehan, inventori terhad, permohonan pinjaman sendiri dan aduan kerosakan sendiri.
